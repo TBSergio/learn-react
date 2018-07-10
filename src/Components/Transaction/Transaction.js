@@ -34,7 +34,7 @@ class Tran extends Component {
     }
     
     render() {
-        return this.createTransaction(Transaction);
+        return this.createTransaction(this.props.tra);
     }
 }
 
