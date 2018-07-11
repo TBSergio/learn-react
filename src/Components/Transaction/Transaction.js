@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './Transaction.css';
 import Collapsible from 'react-collapsible';
-var Transaction = require('../../MockData/Transaction1.json');
 
 class Tran extends Component {
 
@@ -11,14 +10,13 @@ class Tran extends Component {
     createEvents = (Trans) =>{
         let events = [];
         for (let i = 0;i<Trans.Events.length;i++){
-        events.push(<p>EventID: {Trans.Events[i].EventID} | ParentID:{Trans.Events[i].ParentID} | Description: {Trans.Events[i].Description}</p>);
+        events.push(<p key={i}>EventID: {Trans.Events[i].EventID} | ParentID:{Trans.Events[i].ParentID} | Description: {Trans.Events[i].Description}</p>);
         }
         return events;
     }
     createSubServices = (Trans) => {
         let subservices = [];
         for(let i = 0;i<Trans.SubServices.length;i++){
-            let trg = "Transaction: " +Trans.SubServices[i].TranID+" | Provider: "+Trans.SubServices[i].Provider+" | Consumer: "+Trans.SubServices[i].Consumer+" | DateTime:"+Trans.SubServices[i].DateTime;
             subservices.push(this.createTransaction(Trans.SubServices[i]));
         }
         return subservices;
@@ -26,7 +24,7 @@ class Tran extends Component {
     createTransaction = (Trans) => {
         var trg = "Transaction: "+Trans.TranID+" | Provider: "+Trans.Provider+" | Consumer: "+Trans.Consumer+" | DateTime: "+Trans.DateTime;
         return (
-            <Collapsible trigger={trg}>
+            <Collapsible trigger={trg} key={Trans.TranID}>
                 {this.createEvents(Trans)}
                 {this.createSubServices(Trans)}
             </Collapsible>
@@ -34,7 +32,19 @@ class Tran extends Component {
     }
     
     render() {
-        return this.createTransaction(this.props.tra);
+        let chosenTran = {};
+        switch(this.props.tra){
+            case 1:
+                chosenTran=require('../../MockData/Transaction1.json');
+                break;
+            case 2:
+                chosenTran=require('../../MockData/Transaction2.json');
+                break;
+            default:
+                chosenTran={TranID: 'Default',Provider:'Default',Consumer:'Default',DateTime:'Default',Events:[],SubServices:[]};
+                break;
+        }
+        return this.createTransaction(chosenTran);
     }
 }
 
